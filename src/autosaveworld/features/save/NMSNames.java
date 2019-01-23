@@ -17,7 +17,10 @@
 
 package autosaveworld.features.save;
 
+import com.google.common.collect.ImmutableList;
 import org.bukkit.Bukkit;
+
+import java.util.List;
 
 public class NMSNames {
 
@@ -78,6 +81,14 @@ public class NMSNames {
 		} else {
 			return "saveLevel";
 		}
+	}
+
+	protected static List<String> getSaveLevelMethodNames() {
+		return ImmutableList.of(
+				"saveLevel", // MCP name
+				"func_73041_k", // SRG name for 1.7.10
+				"func_73042_a" // SRG name for 1.12.2
+		);
 	}
 
 	protected static boolean isCauldron() {

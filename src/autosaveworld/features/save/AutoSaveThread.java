@@ -18,6 +18,7 @@
 package autosaveworld.features.save;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collection;
 
 import org.bukkit.Bukkit;
@@ -34,6 +35,8 @@ import autosaveworld.utils.SchedulerUtils;
 import autosaveworld.utils.Threads.IntervalTaskThread;
 
 public class AutoSaveThread extends IntervalTaskThread {
+
+	private Method saveLevelMethod;
 
 	public AutoSaveThread() {
 		super("AutoSaveThread");
@@ -132,7 +135,10 @@ public class AutoSaveThread extends IntervalTaskThread {
 			try {
 				Object worldserver = getNMSWorld(world);
 				// invoke saveLevel method which waits for all chunks to save and than dumps RegionFileCache
-				ReflectionUtils.getMethod(worldserver.getClass(), NMSNames.getSaveLevelMethodName(), 0).invoke(worldserver);
+				if (saveLevelMethod == null) {
+					saveLevelMethod = ReflectionUtils.getMethod(worldserver.getClass(), NMSNames.getSaveLevelMethodNames(), 0);
+				}
+				saveLevelMethod.invoke(worldserver);
 			} catch (Exception e) {
 				MessageLogger.exception("Could not dump RegionFileCache", e);
 			}
